@@ -35,3 +35,10 @@ ROLLBACK TO savepoint_1;
 UPDATE animals SET weight_kg = weight_kg * -1 WHERE weight_kg < 0;
 COMMIT;
 SELECT * FROM animals;
+
+SELECT COUNT(*) FROM animals;
+SELECT COUNT(*) FROM animals WHERE escape_attempts = 0;
+SELECT AVG(weight_kg) FROM animals;
+SELECT SUM(escape_attempts) FROM animals WHERE neutered = true;
+SELECT neutered, COUNT(*) FROM animals WHERE escape_attempts > 1 GROUP BY neutered;
+
