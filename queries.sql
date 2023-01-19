@@ -85,3 +85,81 @@ GROUP BY O.full_name
 ORDER BY COUNT(A.name) DESC
 LIMIT 1;
 
+SELECT A.name as animals_name, V.date_of_visits, VE.name as vet_name
+FROM animals A
+JOIN visits V ON A.id = V.animal_id
+JOIN vets VE ON VE.id = V.vet_id 
+WHERE VE.name = 'William Tatcher'
+ORDER BY date_of_birth ASC
+LIMIT 1;
+
+SELECT COUNT(A.name) as animals, VE.name as vet_name
+FROM animals A
+JOIN visits V ON A.id = V.animal_id
+JOIN vets VE ON VE.id = V.vet_id
+WHERE VE.name = 'Stephanie Mendez'
+GROUP BY VE.name;
+
+SELECT VE.name as vet_name, S.name as speciality
+FROM vets VE
+FULL OUTER JOIN specializations SP ON SP.vet_id = VE.id
+FULL OUTER JOIN species S ON S.id = SP.species_id;
+
+SELECT A.name as animals_name, V.date_of_visits, VE.name as vet_name
+FROM animals A
+JOIN visits V ON A.id = V.animal_id
+JOIN vets VE ON VE.id = V.vet_id 
+WHERE VE.name = 'Stephanie Mendez'
+AND V.date_of_visits 
+BETWEEN '2020-04-01' AND '2020-08-30';
+
+SELECT A.name as animals_name, COUNT(V.date_of_visits) as number_of_visits
+FROM animals A
+JOIN visits V ON A.id = V.animal_id
+JOIN vets VE ON VE.id = V.vet_id
+GROUP BY A.name
+ORDER BY COUNT(V.date_of_visits) DESC
+LIMIT 1;
+
+SELECT A.name as animals_name, V.date_of_visits as last_visit_date, VE.name as vet_name
+FROM animals A
+JOIN visits V ON A.id = V.animal_id
+JOIN vets VE ON VE.id = V.vet_id 
+WHERE VE.name = 'Maisy Smith'
+ORDER BY V.date_of_visits ASC
+LIMIT 1;
+
+SELECT A.name as animals_info, VE.name as vet_info, V.date_of_visits
+FROM animals A
+JOIN visits V ON A.id = V.animal_id
+JOIN vets VE ON VE.id = V.vet_id
+WHERE a.name = (
+SELECT A.name FROM animals A JOIN visits V ON A.id = V.animal_id
+JOIN vets VE ON VE.id = V.vet_id GROUP BY A.name
+ORDER BY COUNT(V.date_of_visits) DESC LIMIT 1
+);
+
+-- create a Common Table Expression (CTE)
+WITH visits_not_specialized AS (
+    SELECT V.*, A.*, SP.*
+    FROM visits V
+    JOIN animals A ON V.animal_id = A.id
+    LEFT JOIN specializations SP ON A.species_id = SP.species_id AND V.vet_id = SP.vet_id
+    WHERE SP.species_id IS NULL
+)
+SELECT COUNT(*) as visits_not_specialized
+FROM visits_not_specialized;
+
+WITH animals_by_species_count AS (
+    SELECT S.name, A.species_id, COUNT(*) as number_of_animals
+    FROM visits V
+    JOIN animals A ON V.animal_id = A.id
+    JOIN vets VE ON V.vet_id = VE.id
+    JOIN species S ON S.id = A.species_id
+    WHERE VE.name = 'Maisy Smith'
+    GROUP BY A.species_id, S.name
+    ORDER BY number_of_animals DESC
+)  
+SELECT *
+FROM animals_by_species_count
+LIMIT 1;
