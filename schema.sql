@@ -35,5 +35,28 @@ ADD COLUMN species_id INT REFERENCES species(id) ON DELETE CASCADE;
 ALTER TABLE animals
 ADD COLUMN owner_id INTEGER REFERENCES owners(id) ON DELETE CASCADE;
 
+CREATE TABLE vets (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    date_of_graduation DATE NOT NULL
+);
+
+-- many-to-many join-table
+CREATE TABLE specializations (
+   id SERIAL PRIMARY KEY,
+   species_id INTEGER REFERENCES species(id),
+   vet_id INTEGER REFERENCES vets(id),
+   UNIQUE (species_id, vet_id)
+);
+
+-- many-to-many join-table
+CREATE TABLE visits (
+   id SERIAL PRIMARY KEY,
+   animal_id INTEGER REFERENCES animals(id),
+   vet_id INTEGER REFERENCES vets(id),
+   date_of_visits DATE NOT NULL,
+   UNIQUE (animal_id, vet_id)
+);
 
 
