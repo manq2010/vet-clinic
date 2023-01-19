@@ -44,7 +44,6 @@ CREATE TABLE vets (
 
 -- many-to-many join-table
 CREATE TABLE specializations (
-   id SERIAL PRIMARY KEY,
    species_id INTEGER REFERENCES species(id),
    vet_id INTEGER REFERENCES vets(id),
    UNIQUE (species_id, vet_id)
@@ -52,11 +51,8 @@ CREATE TABLE specializations (
 
 -- many-to-many join-table
 CREATE TABLE visits (
-   id SERIAL PRIMARY KEY,
    animal_id INTEGER REFERENCES animals(id),
    vet_id INTEGER REFERENCES vets(id),
    date_of_visits DATE NOT NULL,
-   UNIQUE (animal_id, vet_id)
+   UNIQUE (animal_id, vet_id, date_of_visits)
 );
-
-
