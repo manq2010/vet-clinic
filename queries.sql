@@ -163,3 +163,6 @@ WITH animals_by_species_count AS (
 SELECT *
 FROM animals_by_species_count
 LIMIT 1;
+
+EXPLAIN ANALYSE SELECT COUNT(*) FROM visits where animal_id = 4;
+EXPLAIN ANALYSE SELECT * FROM visits where vet_id = 2;
